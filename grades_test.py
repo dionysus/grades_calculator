@@ -31,6 +31,16 @@ def test_tree_grade() -> None:
     assert test01._goal_grade == 95
 
 
+def test_tree_existing_grade() -> None:
+    """Test for nested grades
+    """
+    tests = Grades(None, None, 90, None)
+    test01 = Grades(50, None, None, tests)
+    test01.update_grade_received(80)
+    test02 = Grades(50, None, None, tests)
+    assert test02._goal_grade == 100
+
+
 if __name__ == '__main__':
     import pytest
     pytest.main(['grades_test.py'])

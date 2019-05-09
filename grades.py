@@ -26,15 +26,24 @@ class Grades:
     grade_received: Optional[float]
     grade_total: Optional[float]
     goal_percent: Optional[int]
+
     _goal_grade: float
+    _needed_percent: float
     _sub_grades: List[Grades]
     _parent: Optional[Grades]
 
+    '''
+    marks received in total = sum of sub grade_received
+    grade total = 
+    
+    '''
+
+
     def __init__(self,
                  weight: Optional[float],
-                 grade_total: float,
-                 goal_percent: Optional[int] = None,
-                 parent: Optional[Grades] = None
+                 grade_total: Optional[float],
+                 goal_percent: Optional[int],
+                 parent: Optional[Grades]
                  ) -> None:
         """
         """
@@ -68,16 +77,33 @@ class Grades:
         or None
         """
         self.grade_received = grade
-        if not grade:
-            self._parent.update_goals()
 
-    def update_goal_percent(self, goal_percent: int) -> None:
+        # update all
+        self._parent.update_all_goal_percents()
+
+    def update_goal_percent(self, goal_percent: Optional[int]) -> None:
         """update the goal percent with goal_percent of tree and children
         """
         self.goal_percent = goal_percent
         self.update_goal_grade()
 
-        # update children
+        # update all
+        self._parent.update_all_goal_percents()
+
+    def update_all_goal_percents(self) -> None:
+        """update the goal percent with goal_percent of tree and children
+        """
+        # if self._sub_grades == []:
+        #     pass
+        # if self._parent is None:
+        #     pass
+        # else:
+        #     self._parent
+
+        percent_received = 0
+
+        for each in self._sub_grades:
+
 
     def update_goal_grade(self) -> None:
         """update the goal_grade with the required grade (ceil) to
