@@ -70,7 +70,7 @@ class Grades:
             # TODO: update all goal percents
             # self.goal_percent = self.get_goal_percent()
             self.goal_percent = self._parent.goal_percent
-        self._goal_grade = math.ceil((self.goal_percent / 100) * self.grade_total)
+        self._goal_grade = math.ceil(self.goal_percent / 100 * self.grade_total)
 
     def update_grade_received(self, grade: Optional[float]) -> None:
         """update the grade received with a float rounded to 1 decimal point
