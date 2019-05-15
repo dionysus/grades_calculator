@@ -43,6 +43,33 @@ def test_two_percent_no_rcv() -> None:
     assert test02.goal_percent == 90
 
 
+def test_remove_subgrade() -> None:
+    """
+    """
+    tests = Grades(None, None, 90)
+    test01 = Grades(25, None, None)
+    test02 = Grades(25, None, None)
+    test03 = Grades(50, None, None)
+
+    tests.add_subgrade(test01)
+    tests.add_subgrade(test02)
+    tests.add_subgrade(test03)
+
+    assert test01.goal_percent == 90
+    assert test02.goal_percent == 90
+    assert test03.goal_percent == 90
+
+    test03.update_grade_received(100)
+
+    assert test01.goal_percent == 80
+    assert test02.goal_percent == 80
+
+    tests.remove_subgrade(test03)
+
+    assert test01.goal_percent == 90
+    assert test02.goal_percent == 90
+
+
 def test_update_remaining_percent() -> None:
     """Test for update_remaining_percent method
     """

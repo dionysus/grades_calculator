@@ -66,9 +66,9 @@ class Grades:
         self._remaining_percent = self.goal_percent
         self._max_percent = 100
 
-    def add_subgrade(self, grade: Grades):
+    def add_subgrade(self, grade: Grades) -> None:
         """
-        add subgrade to parent
+        add subgrade to parent and parent to subgrade
 
         eg. question -> midterm -> tests
         """
@@ -80,6 +80,17 @@ class Grades:
                 self.weight = grade.weight
             else:
                 self.weight += grade.weight
+
+        self.update_all_goal_percents()
+
+    def remove_subgrade(self, grade: Grades) -> None:
+        """remove subgrade from parent and parent from subgrade
+        """
+        self._subgrades.remove(grade)
+        grade._parent = None
+
+        if grade.weight is not None:
+            self.weight -= grade.weight
 
         self.update_all_goal_percents()
 
