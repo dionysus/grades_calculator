@@ -15,10 +15,8 @@ def test_single_grade() -> None:
     """Test for unnested grades
     """
     test = Grades(100, 20, 95)
-    assert test._goal_grade == 19
 
     test02 = Grades(100, None, 95)
-    assert test02._goal_grade == 95
     assert test02.goal_percent == 95
 
 
@@ -52,9 +50,9 @@ def test_update_remaining_percent() -> None:
     test01 = Grades(50, 100, None)
     test02 = Grades(50, 100, None)
 
-    tests._sub_grades.append(test01)
+    tests._subgrades.append(test01)
     test01._parent = tests
-    tests._sub_grades.append(test02)
+    tests._subgrades.append(test02)
     test02._parent = tests
 
     test02.grade_received = 80
@@ -64,7 +62,7 @@ def test_update_remaining_percent() -> None:
     assert tests._remaining_percent == 100
 
 
-def test_two_percent_single_rcv() -> None:
+def test_goal_percent_two_percent_single_rcv() -> None:
     """Test for two unnested grades with single grade received.
     """
     tests = Grades(None, None, 90)
@@ -84,30 +82,32 @@ def test_two_percent_single_rcv() -> None:
     assert test02.goal_percent == 100
 
 
-# def test_tree_grade() -> None:
-#     """Test for nested grades
-#     """
-#     tests = Grades(None, None, 95, None)
-#     test01 = Grades(None, None, None, tests)
-#
-#     assert test01._parent is tests
-#     assert test01.goal_percent == 95
-#     assert test01._goal_grade == 95
-#
-#
-# def test_tree_existing_grade() -> None:
-#     """Test for nested grades
-#     """
-#     tests = Grades(None, None, 90)
-#     test01 = Grades(50, None, None)
-#     test02 = Grades(50, None, None)
-#
-#     assert test01.goal_percent == 90
-#     assert test02.goal_percent == 90
-#
-#     test01.update_grade_received(80)
-#
-#     assert test02._goal_grade == 100
+def test_goal_percent_nested_percent() -> None:
+    """Test for nested grades with grades received.
+    """
+    tests = Grades(None, None, 90)
+
+    midterm = Grades(100, 50, None)
+
+    tests.add_subgrade(midterm)
+
+    question01 = Grades(10, 10, None)
+    midterm.add_subgrade(question01)
+    question02 = Grades(10, 10, None)
+    midterm.add_subgrade(question02)
+    question03 = Grades(10, 10, None)
+    midterm.add_subgrade(question03)
+    question04 = Grades(10, 10, None)
+    midterm.add_subgrade(question04)
+    question05 = Grades(10, 10, None)
+    midterm.add_subgrade(question05)
+
+    question01.update_grade_received(10)
+    question02.update_grade_received(10)
+    question03.update_grade_received(10)
+    question04.update_grade_received(5)
+
+    assert question05.goal_percent == 100
 
 
 if __name__ == '__main__':
