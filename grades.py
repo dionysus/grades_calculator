@@ -17,6 +17,7 @@ class Grades:
 
     == private attributes ==
 
+    _name - name of grade
     _subgrades - list of sub grades
     _parent - parent of the tree
     _remaining_percent - percent needed for sub grades to achieve goal percent
@@ -32,18 +33,23 @@ class Grades:
     grade_total: Optional[float]
     goal_percent: Optional[int]
 
+    _name: str
     _remaining_percent: int
     _max_percent: float
     _subgrades: List[Grades]
     _parent: Optional[Grades]
 
     def __init__(self,
+                 name: str,
                  weight: Optional[float],
                  grade_total: Optional[float],
                  goal_percent: Optional[int]
                  ) -> None:
         """
         """
+
+        self._name = name
+
         self.weight = weight
 
         self.grade_received = None
@@ -92,6 +98,8 @@ class Grades:
         if grade.weight is not None:
             self.weight -= grade.weight
 
+        grade.update_grade_received(GOAL_PERCENT)
+
         self.update_all_goal_percents()
 
     def update_grade_received(self, grade: Optional[float]) -> None:
@@ -100,7 +108,6 @@ class Grades:
         """
         self.grade_received = grade
 
-        # update all
         if self._parent is not None:
             self._parent.update_all_goal_percents()
 
@@ -144,3 +151,11 @@ class Grades:
         """get required grade to achieve goal_percent
         """
         return math.ceil(self.goal_percent / 100 * self.grade_total)
+
+    def print_tree(self, indentation: int = 0) -> None:
+        """ Print a simple text visualization of the Tree
+        """
+        print(str(indentation) + ']-' + indentation * '-' + '>', self._name)
+
+        for subtree in self._subgrades:
+            subtree.print_tree(indentation + 1)
