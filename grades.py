@@ -22,11 +22,10 @@ class Grades:
     _parent - parent of the tree
     _remaining_percent - percent needed for sub grades to achieve goal percent
     _max_percent - maximum percent achievable
+    _goal_percent_set - true if manually set (not determined by parent)
 
     == precondition ==
     all values (except grade_received) >= 0
-
-
     """
     weight: Optional[float]
     grade_received: Optional[float]
@@ -38,6 +37,7 @@ class Grades:
     _max_percent: float
     _subgrades: List[Grades]
     _parent: Optional[Grades]
+    _goal_percent_set: bool
 
     def __init__(self,
                  name: str,
@@ -45,8 +45,6 @@ class Grades:
                  grade_total: Optional[float],
                  goal_percent: Optional[int]
                  ) -> None:
-        """
-        """
 
         self._name = name
 
@@ -64,10 +62,14 @@ class Grades:
 
         if goal_percent is not None:
             self.goal_percent = goal_percent
-        elif self._parent is None:
-            self.goal_percent = GOAL_PERCENT
+            self._goal_percent_set = True
         else:
-            self.goal_percent = self._parent._remaining_percent
+            self._goal_percent_set = False
+            if self._parent is None:
+                self.goal_percent = GOAL_PERCENT
+            else:
+                self.goal_percent = self._parent._remaining_percent
+
 
         self._remaining_percent = self.goal_percent
         self._max_percent = 100
@@ -111,10 +113,20 @@ class Grades:
         if self._parent is not None:
             self._parent.update_all_goal_percents()
 
+    def set_goal_percent(self, percent: int) -> None:
+        """
+        """
+        self.goal_percent = percent
+        self._goal_percent_set = True
+
+        if self._parent is not None:
+            self._parent.update_all_goal_percents()
+
     def update_all_goal_percents(self) -> None:
         """update the goal percent with goal_percent of tree and children
         """
         # TODO: but what if goal is set for a subgrade?
+        # use attribute _goal_percent_set
 
         self.update_remaining_percent()
 
