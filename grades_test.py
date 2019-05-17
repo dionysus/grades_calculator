@@ -146,9 +146,9 @@ if __name__ == '__main__':
     midterm.add_subgrade(question04)
     question05 = Grades("question 05", 10, 10, None)
     midterm.add_subgrade(question05)
-    # question01.update_grade_received(5)
-    # question02.update_grade_received(10)
-    # question03.update_grade_received(5)
-    # question04.update_grade_received(10)
+    question01.update_grade_received(8)
+    question02.update_grade_received(8)
+    question03.update_grade_received(10)
+    question04.update_grade_received(10)
 
     tests.print_tree()

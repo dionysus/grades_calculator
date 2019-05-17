@@ -113,11 +113,17 @@ class Grades:
         if self._parent is not None:
             self._parent.update_all_goal_percents()
 
-    def set_goal_percent(self, percent: int) -> None:
+    def set_goal_percent(self, percent: Optional[int]) -> None:
+        """update the goal_percent with a fixed goal, or clear goal
         """
-        """
-        self.goal_percent = percent
-        self._goal_percent_set = True
+
+        if percent is not None:
+            self.goal_percent = percent
+            self._goal_percent_set = True
+
+        else:
+            self.goal_percent = None
+            self._goal_percent_set = False
 
         if self._parent is not None:
             self._parent.update_all_goal_percents()
@@ -125,14 +131,13 @@ class Grades:
     def update_all_goal_percents(self) -> None:
         """update the goal percent with goal_percent of tree and children
         """
-        # TODO: but what if goal is set for a subgrade?
-        # use attribute _goal_percent_set
-
         self.update_remaining_percent()
 
         for sub in self._subgrades:
-            if sub.grade_received is None:
+            if sub.grade_received is None and not sub._goal_percent_set:
                 sub.goal_percent = self._remaining_percent
+            if sub.grade_received:
+                sub.goal_percent = None
 
     def update_remaining_percent(self) -> None:
         """
@@ -152,6 +157,10 @@ class Grades:
                 rcv_weight += sub.weight
                 rcv_value += sub.weight * sub.grade_received / sub.grade_total
 
+            elif sub._goal_percent_set:
+                rcv_weight += sub.weight
+                rcv_value += sub.weight * sub.goal_percent / 100
+
         self.weight = total_weight
 
         self._remaining_percent = math.ceil(
@@ -167,7 +176,12 @@ class Grades:
     def print_tree(self, indentation: int = 0) -> None:
         """ Print a simple text visualization of the Tree
         """
-        print(str(indentation) + ']-' + indentation * '-' + '>', self._name)
+
+        id_str = '{} [WT: {} / GP: {} / GR: {} / GT: {}]'.format(
+            self._name, self.weight, self.goal_percent, self.grade_received,
+            self.grade_total)
+
+        print(str(indentation) + ']-' + indentation * '-' + '>', id_str)
 
         for subtree in self._subgrades:
             subtree.print_tree(indentation + 1)
