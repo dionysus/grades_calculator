@@ -149,6 +149,9 @@ class Grades:
         rcv_weight = 0
         rcv_value = 0
 
+        total_grade_total = 0
+        total_grade_received = 0
+
         for sub in self._subgrades:
 
             total_weight += sub.weight
@@ -156,6 +159,8 @@ class Grades:
             if sub.grade_received is not None:
                 rcv_weight += sub.weight
                 rcv_value += sub.weight * sub.grade_received / sub.grade_total
+                total_grade_total += sub.grade_total
+                total_grade_received += sub.grade_received
 
             elif sub._goal_percent_set:
                 rcv_weight += sub.weight
@@ -163,10 +168,19 @@ class Grades:
 
         self.weight = total_weight
 
-        self._remaining_percent = math.ceil(
-            (self.goal_percent / 100 * total_weight - rcv_value) /
-            (total_weight - rcv_weight) * 100
-        )
+        # TODO: no weight?
+
+        if total_weight <= rcv_weight:  # all marks received
+            self._remaining_percent = 0
+            self.grade_received = total_grade_received
+            self.grade_total = total_grade_total
+            self.grade_received = total_grade_received
+
+        else:
+            self._remaining_percent = math.ceil(
+                (self.goal_percent / 100 * total_weight - rcv_value) /
+                (total_weight - rcv_weight) * 100
+            )
 
     def get_goal_grade(self) -> int:
         """get required grade to achieve goal_percent

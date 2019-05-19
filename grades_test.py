@@ -5,9 +5,12 @@ from grades import Grades
 
 
 '''
-Grades__init__
-(self, weight: Optional[float], grade_total: float, goal_percent: Optional[int], 
-parent: Optional[Grades]) -> None:
+self,
+                 name: str,
+                 weight: Optional[float],
+                 grade_total: Optional[float],
+                 goal_percent: Optional[int]
+                 ) -> None:
 '''
 
 def test_single_percent() -> None:
@@ -127,12 +130,8 @@ def test_goal_percent_nested_percent() -> None:
     assert question05.goal_percent == 100
 
 
-if __name__ == '__main__':
-    import pytest
-    pytest.main(['grades_test.py'])
-
-    print()
-
+def test_goal_percent_updating() -> None:
+    """"""
     tests = Grades("tests", None, None, 90)
     midterm = Grades("midterm", 100, 50, None)
     tests.add_subgrade(midterm)
@@ -146,9 +145,79 @@ if __name__ == '__main__':
     midterm.add_subgrade(question04)
     question05 = Grades("question 05", 10, 10, None)
     midterm.add_subgrade(question05)
-    question01.update_grade_received(8)
-    question02.update_grade_received(8)
-    question03.update_grade_received(10)
-    question04.update_grade_received(10)
 
-    tests.print_tree()
+    for q in [question01, question02, question03, question04, question05]:
+        assert q.goal_percent == 90
+
+    # one grade received
+    question01.update_grade_received(8)
+    for p in [question01]:
+        assert p.goal_percent is None
+    for q in [question02, question03, question04, question05]:
+        assert q.goal_percent == 93
+
+    # two grade received
+    question02.update_grade_received(8)
+    for p in [question01, question02]:
+        assert p.goal_percent is None
+    for q in [question03, question04, question05]:
+        assert q.goal_percent == 97
+
+    # three grade received
+    question03.update_grade_received(10)
+    for p in [question01, question02, question03]:
+        assert p.goal_percent is None
+    for q in [question04, question05]:
+        assert q.goal_percent == 95
+
+    # four grade received
+    question04.update_grade_received(10)
+    for p in [question01, question02, question03, question04]:
+        assert p.goal_percent is None
+    for q in [question05]:
+        assert q.goal_percent == 90
+
+    # five grade received
+    question05.update_grade_received(10)
+    for p in [question01, question02, question03, question04, question05]:
+        assert p.goal_percent is None
+
+
+if __name__ == '__main__':
+    import pytest
+    pytest.main(['grades_test.py'])
+
+    print()
+
+    # tests = Grades("tests", None, None, 90)
+    midterm = Grades("midterm", None, 50, 85)
+    # tests.add_subgrade(midterm)
+    question01 = Grades("question 01", None, 10, 95)
+    midterm.add_subgrade(question01)
+    question02 = Grades("question 02", None, 10, None)
+    midterm.add_subgrade(question02)
+    question03 = Grades("question 03", None, 10, None)
+    midterm.add_subgrade(question03)
+    question04 = Grades("question 04", None, 10, None)
+    midterm.add_subgrade(question04)
+    question05 = Grades("question 05", None, 10, None)
+    midterm.add_subgrade(question05)
+
+    midterm.print_tree()
+    print()
+    question01.update_grade_received(8)
+    midterm.print_tree()
+    print()
+    question02.update_grade_received(8)
+    midterm.print_tree()
+    print()
+    question03.update_grade_received(10)
+    midterm.print_tree()
+    print()
+    question04.update_grade_received(10)
+    midterm.print_tree()
+    print()
+    question05.update_grade_received(10)
+    midterm.print_tree()
+    print()
+
