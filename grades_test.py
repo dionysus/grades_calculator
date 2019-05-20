@@ -3,15 +3,15 @@ import math
 
 from grades import Grades
 
+'''
+Grades
+     name: str,
+     weight: Optional[float],
+     grade_total: Optional[float],
+     goal_percent: Optional[int]
+     -> None
+'''
 
-'''
-self,
-                 name: str,
-                 weight: Optional[float],
-                 grade_total: Optional[float],
-                 goal_percent: Optional[int]
-                 ) -> None:
-'''
 
 def test_single_percent() -> None:
     """Test for single unnested grade
@@ -77,9 +77,7 @@ def test_update_remaining_percent() -> None:
 
     test02.grade_received = 80
 
-    tests.update_remaining_percent()
-
-    assert tests._remaining_percent == 100
+    assert tests.update_remaining_percent() == 100
 
 
 def test_goal_percent_two_percent_single_rcv() -> None:
@@ -98,7 +96,6 @@ def test_goal_percent_two_percent_single_rcv() -> None:
 
     test01.update_grade_received(80)
 
-    assert tests._remaining_percent == 100
     assert test02.goal_percent == 100
 
 
@@ -192,15 +189,15 @@ if __name__ == '__main__':
     # tests = Grades("tests", None, None, 90)
     midterm = Grades("midterm", None, 50, 85)
     # tests.add_subgrade(midterm)
-    question01 = Grades("question 01", None, 10, 95)
+    question01 = Grades("question 01", 1, 10, 95)
     midterm.add_subgrade(question01)
-    question02 = Grades("question 02", None, 10, None)
+    question02 = Grades("question 02", 1, 10, None)
     midterm.add_subgrade(question02)
-    question03 = Grades("question 03", None, 10, None)
+    question03 = Grades("question 03", 1, 10, None)
     midterm.add_subgrade(question03)
-    question04 = Grades("question 04", None, 10, None)
+    question04 = Grades("question 04", 1, 10, None)
     midterm.add_subgrade(question04)
-    question05 = Grades("question 05", None, 10, None)
+    question05 = Grades("question 05", 1, 10, None)
     midterm.add_subgrade(question05)
 
     midterm.print_tree()

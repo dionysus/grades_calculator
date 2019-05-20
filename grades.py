@@ -9,6 +9,9 @@ class Grades:
     """
     Grades Tree
 
+    Tree that will calculate percentage required to achieve goal percent of
+    parent.
+
     == attributes ==
     weight - percentage of weight.  if none, count marks
     grade_received - mark received
@@ -20,9 +23,10 @@ class Grades:
     _name - name of grade
     _subgrades - list of sub grades
     _parent - parent of the tree
-    _remaining_percent - percent needed for sub grades to achieve goal percent
-    _max_percent - maximum percent achievable
     _goal_percent_set - true if manually set (not determined by parent)
+
+    # TODO: potential attributes
+    _max_percent - maximum percent achievable
 
     == precondition ==
     all values (except grade_received) >= 0
@@ -30,14 +34,14 @@ class Grades:
     weight: Optional[float]
     grade_received: Optional[float]
     grade_total: Optional[float]
+
     goal_percent: Optional[int]
+    _goal_percent_set: bool
 
     _name: str
-    _remaining_percent: int
     _max_percent: float
     _subgrades: List[Grades]
     _parent: Optional[Grades]
-    _goal_percent_set: bool
 
     def __init__(self,
                  name: str,
@@ -65,13 +69,8 @@ class Grades:
             self._goal_percent_set = True
         else:
             self._goal_percent_set = False
-            if self._parent is None:
-                self.goal_percent = GOAL_PERCENT
-            else:
-                self.goal_percent = self._parent._remaining_percent
+            self.goal_percent = GOAL_PERCENT
 
-
-        self._remaining_percent = self.goal_percent
         self._max_percent = 100
 
     def add_subgrade(self, grade: Grades) -> None:
@@ -131,18 +130,18 @@ class Grades:
     def update_all_goal_percents(self) -> None:
         """update the goal percent with goal_percent of tree and children
         """
-        self.update_remaining_percent()
+        remaining_percent = self.update_remaining_percent()
 
         for sub in self._subgrades:
             if sub.grade_received is None and not sub._goal_percent_set:
-                sub.goal_percent = self._remaining_percent
+                sub.goal_percent = remaining_percent
             if sub.grade_received:
                 sub.goal_percent = None
 
-    def update_remaining_percent(self) -> None:
+    def update_remaining_percent(self) -> int:
         """
-        for parent nodes, update remaining_percent needed for subgrades
-        to received desired grade
+        return grade percent needed for subgrades without received grade or
+        individual goal grade to received goal grade
         """
         total_weight = 0
 
@@ -171,16 +170,18 @@ class Grades:
         # TODO: no weight?
 
         if total_weight <= rcv_weight:  # all marks received
-            self._remaining_percent = 0
+            remaining_percent = 0
             self.grade_received = total_grade_received
             self.grade_total = total_grade_total
             self.grade_received = total_grade_received
 
         else:
-            self._remaining_percent = math.ceil(
+            remaining_percent = math.ceil(
                 (self.goal_percent / 100 * total_weight - rcv_value) /
                 (total_weight - rcv_weight) * 100
             )
+
+        return remaining_percent
 
     def get_goal_grade(self) -> int:
         """get required grade to achieve goal_percent
