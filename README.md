@@ -2,6 +2,13 @@
 
 Personal project: a grades calculator for setting course goals to achieve optimal grades.
 
+This is a program I am working on that, having input the course items (from a syllabus, per se), and setting goals, will help track the necessary grades needed to achieve the course goal.
+
+The concept is taken  from a spreadsheet I have been using to track my grades.
+
+Personal Project
+Language: Python
+
 ---
 
 ## Structure
