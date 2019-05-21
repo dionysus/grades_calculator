@@ -23,10 +23,10 @@ CS101
 │   ├── PSet 2
 │   ├── PSet 3
 │   └── Pset 4
-├── exams
-│   ├── midterm 1
-│   ├── midterm 1
-│   └── final
+└── exams
+    ├── midterm 1
+    ├── midterm 1
+    └── final
 ```
 ---
 
@@ -49,10 +49,10 @@ CS101               WEIGHT
 │   ├── PSet 2        [5%]
 │   ├── PSet 3        [5%]
 │   └── Pset 4        [5%]
-├── exams           [75%]
-│   ├── midterm 1     [15%]
-│   ├── midterm 2     [15%]
-│   └── final         [45%]
+└── exams           [75%]
+    ├── midterm 1     [15%]
+    ├── midterm 2     [15%]
+    └── final         [45%]
 ```
 
 The final weight should be 100%, but we should account for bonus marks, or grades over 100%.
@@ -81,10 +81,10 @@ CS101               [100]       [90]
 │   ├── PSet 2          [5]         [90]
 │   ├── PSet 3          [5]         [90]
 │   └── Pset 4          [5]         [90]
-├── exams             [75]        [90]
-│   ├── midterm 1       [15]        [90]
-│   ├── midterm 2       [15]        [90]
-│   └── final           [45]        [90]
+└── exams             [75]        [90]
+    ├── midterm 1       [15]        [90]
+    ├── midterm 2       [15]        [90]
+    └── final           [45]        [90]
 ```
 
 Then without any set goals, we will simply need to achieve 90% in every item.
@@ -105,10 +105,10 @@ CS101               [100]       (85)
 │   ├── PSet 2          [5]         [95]
 │   ├── PSet 3          [5]         [95]
 │   └── Pset 4          [5]         [95]
-├── exams             [75]        [82]
-│   ├── midterm 1       [15]        [82]
-│   ├── midterm 2       [15]        [82]
-│   └── final           [45]        [82]
+└── exams             [75]        [82]
+    ├── midterm 1       [15]        [82]
+    ├── midterm 2       [15]        [82]
+    └── final           [45]        [82]
 ```
 
 That means for the `weekly preps`, our goal is 100%, and for `assignments`, our goal is 95%, then for our `exams`, we will need at least 82% to achieve our goal of 85%.
@@ -134,10 +134,10 @@ CS101               [100]       (85)
 │   ├── PSet 2          [5]         [95]
 │   ├── PSet 3          [5]         [95]
 │   └── Pset 4          [5]         [95]
-├── exams             [75]        [82]
-│   ├── midterm 1       [15]        (90)
-│   ├── midterm 2       [15]        (90)
-│   └── final           [45]        [78]
+└── exams             [75]        [82]
+    ├── midterm 1       [15]        (90)
+    ├── midterm 2       [15]        (90)
+    └── final           [45]        [78]
 ```
 
 Then the minimum we need for the final will be only 78%, to achieve an overall 85%.
@@ -160,10 +160,10 @@ CS101               [100]       (85)          [None]        [50]
 │   ├── PSet 2          [5]         None          (20)          (18)
 │   ├── PSet 3          [5]         None          (20)          (19)
 │   └── Pset 4          [5]         None          (20)          (18)
-├── exams             [75]        [83]          [None]        [None]
-│   ├── midterm 1       [15]        (90)          (40)          (36)
-│   ├── midterm 2       [15]        (90)          (40)          [None]
-│   └── final           [45]        [79]          (80)          [None]
+└── exams             [75]        [83]          [None]        [None]
+    ├── midterm 1       [15]        (90)          (40)          (36)
+    ├── midterm 2       [15]        (90)          (40)          [None]
+    └── final           [45]        [79]          (80)          [None]
 ```
 
 Since we received:
