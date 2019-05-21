@@ -1,6 +1,6 @@
 # grades_calculator
 
-Personal project: a grades calculator for setting course goals to achieve optimal grades.
+A grades calculator for setting course goals to achieve optimal grades.
 
 This is a program I am working on that, having input the course items (from a syllabus, per se), and setting goals, will help track the necessary grades needed to achieve the course goal.
 
