@@ -44,22 +44,23 @@ For each tree, the `weight` is defined as the percent the item accounts for of t
 In our example, the syllabus provides a thorough breakdown of what each course item weighs:
 
 ```
-CS101               WEIGHT
-├── weekly preps    [5%]
-│   ├── week 1        [1%]
-│   ├── week 2        [1%]
-│   ├── week 3        [1%]
-│   ├── week 4        [1%]
-│   └── week 5        [1%]
-├── assignments     [20%]
-│   ├── PSet 1        [5%]
-│   ├── PSet 2        [5%]
-│   ├── PSet 3        [5%]
-│   └── Pset 4        [5%]
-└── exams           [75%]
-    ├── midterm 1     [15%]
-    ├── midterm 2     [15%]
-    └── final         [45%]
+                    WEIGHT %
+CS101               [100%]
+├── weekly preps      [5%]
+│   ├── week 1          [1%]
+│   ├── week 2          [1%]
+│   ├── week 3          [1%]
+│   ├── week 4          [1%]
+│   └── week 5          [1%]
+├── assignments       [20%]
+│   ├── PSet 1          [5%]
+│   ├── PSet 2          [5%]
+│   ├── PSet 3          [5%]
+│   └── Pset 4          [5%]
+└── exams             [75%]
+    ├── midterm 1       [15%]
+    ├── midterm 2       [15%]
+    └── final           [45%]
 ```
 
 The final weight should be 100%, but we should account for bonus marks, or grades over 100%.
