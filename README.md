@@ -89,7 +89,7 @@ CS101               [100]       [90]
 
 Then without any set goals, we will simply need to achieve 90% in every item.
 
-But let's say that since `weekly preps` are free marks, and `assignments` we can work hard on, these are manually set (using the `()` brackets to denote this), then we can see the goals of the remaining.
+But let's say that we set our course goal to 85%.  Also, `weekly preps` are free marks, and `assignments` we can work hard on, these are manually set (using the `()` brackets to denote this), then we can see the goals of the remaining.
 
 ```
                     WEIGHT %    GOAL %
@@ -113,10 +113,10 @@ CS101               [100]       (85)
 
 That means for the `weekly preps`, our goal is 100%, and for `assignments`, our goal is 95%, then for our `exams`, we will need at least 82% to achieve our goal of 85%.
 
->`goal` = `weekly preps` + `assignments` + `exams`
-> 85% = (100% * 5%) + (95% * 20%) + (`exams.goal_percent` * 75%)
-> 85% = (5%) + (19%) + (`exams.goal_percent` * 75%)
-> `exams.goal_percent` = 82%
+>`goal` = `weekly preps` + `assignments` + `exams`  
+85% = (100% * 5%) + (95% * 20%) + (`exams.goal_percent` * 75%)  
+85% = (5%) + (19%) + (`exams.goal_percent` * 75%)  
+`exams.goal_percent` = 82%  
 
 But this can be tuned further.  For example, we think we can get 90% on our both `midterm 1` and `midterm 2`, so we can put those as our goals.
 
@@ -172,10 +172,10 @@ Since we received:
 
 Then:
 
->`goal` = `weekly preps` + `assignments` + `exams`
-> 85% = (100% * 5%) + (90% * 20%) + `exams`
-> 85% = (5%) + (18%) + (`exams.goal_percent` * 75%)
-> `exams.goal_percent` = 83%
+>`goal` = `weekly preps` + `assignments` + `exams`  
+85% = (100% * 5%) + (90% * 20%) + `exams`  
+85% = (5%) + (18%) + (`exams.goal_percent` * 75%)  
+`exams.goal_percent` = 83%  
 
 So we will now need 83% on our exams to achieve our 85% goal.
 
