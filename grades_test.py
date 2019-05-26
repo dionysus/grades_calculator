@@ -186,13 +186,13 @@ if __name__ == '__main__':
 
     print()
 
-    course = Grades("CSC 101", None, None, 90)
+    course = Grades("CSC 101", None, None, None)
 
     # WEEKLY PREPS
     preps = Grades("weekly preps", 5, None, None)
     course.add_subgrade(preps)
 
-    # ASSIGNMENTS
+    # PSETS
     assignments = Grades("assignments", 20, None, None)
     course.add_subgrade(assignments)
 
@@ -203,7 +203,7 @@ if __name__ == '__main__':
     pset03 = Grades("pset 03", 5, 10, None)
     assignments.add_subgrade(pset03)
     pset04 = Grades("pset 04", 5, 10, None)
-    assignments.add_subgrade(pset03)
+    assignments.add_subgrade(pset04)
 
     # EXAMS
     exams = Grades("tests", 75, None, None)
@@ -217,5 +217,11 @@ if __name__ == '__main__':
     exams.add_subgrade(final)
 
     course.print_tree()
-    print()
+    print('-' * 70 + '\n' * 3)
 
+    course.set_goal_percent(85)
+    # preps.set_goal_percent(100)
+    # assignments.set_goal_percent(95)
+
+    course.print_tree()
+    print('-' * 70 + '\n' * 3)
