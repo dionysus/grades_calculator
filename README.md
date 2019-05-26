@@ -188,3 +188,31 @@ Then:
 So we will now need 83% on our exams to achieve our 85% goal.
 
 But since `midterm 1` has received its grade, and `midterm 2` has a set goal, then the `final` goal is adjusted to 79%.
+
+## Methods
+
+### `print_tree()`
+
+Print a simple text visualization of the Tree.
+
+The left illustrates the tree structure.
+The right columns display the tree attributes:
+- WT: weight, % of parent grade that this item is worth
+- GP: goal percentage, % goal set, or %  required to achieve parent goal
+- GR: grade received out of GT
+- GT: total marks available for item
+
+```
+CSC 101                   [WT: 100 | GP:   90 | GR: --- | GT: 100]
+----------------------------------------------------------------------
+├── weekly preps          [WT:   5 | GP:   90 | GR: --- | GT: 100]
+├── assignments           [WT:  20 | GP:   90 | GR: --- | GT: 100]
+│   ├── pset 01           [WT:   5 | GP:   90 | GR: --- | GT:  10]
+│   ├── pset 02           [WT:   5 | GP:   90 | GR: --- | GT:  10]
+│   ├── pset 03           [WT:   5 | GP:   90 | GR: --- | GT:  10]
+│   └── pset 03           [WT:   5 | GP:   90 | GR: --- | GT:  10]
+└── tests                 [WT:  75 | GP:   90 | GR: --- | GT: 100]
+    ├── midterm 01        [WT:  15 | GP:   90 | GR: --- | GT:  40]
+    ├── midterm 02        [WT:  15 | GP:   90 | GR: --- | GT:  40]
+    └── final             [WT:  45 | GP:   90 | GR: --- | GT:  80]
+```
