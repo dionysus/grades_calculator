@@ -186,35 +186,36 @@ if __name__ == '__main__':
 
     print()
 
-    # tests = Grades("tests", None, None, 90)
-    midterm = Grades("midterm", None, 50, 85)
-    # tests.add_subgrade(midterm)
-    question01 = Grades("question 01", 1, 10, 95)
-    midterm.add_subgrade(question01)
-    question02 = Grades("question 02", 1, 10, None)
-    midterm.add_subgrade(question02)
-    question03 = Grades("question 03", 1, 10, None)
-    midterm.add_subgrade(question03)
-    question04 = Grades("question 04", 1, 10, None)
-    midterm.add_subgrade(question04)
-    question05 = Grades("question 05", 1, 10, None)
-    midterm.add_subgrade(question05)
+    course = Grades("CSC 101", None, None, 90)
 
-    midterm.print_tree()
-    print()
-    question01.update_grade_received(8)
-    midterm.print_tree()
-    print()
-    question02.update_grade_received(8)
-    midterm.print_tree()
-    print()
-    question03.update_grade_received(10)
-    midterm.print_tree()
-    print()
-    question04.update_grade_received(10)
-    midterm.print_tree()
-    print()
-    question05.update_grade_received(10)
-    midterm.print_tree()
+    # WEEKLY PREPS
+    preps = Grades("weekly preps", 5, None, None)
+    course.add_subgrade(preps)
+
+    # ASSIGNMENTS
+    assignments = Grades("assignments", 20, None, None)
+    course.add_subgrade(assignments)
+
+    pset01 = Grades("pset 01", 5, 10, None)
+    assignments.add_subgrade(pset01)
+    pset02 = Grades("pset 02", 5, 10, None)
+    assignments.add_subgrade(pset02)
+    pset03 = Grades("pset 03", 5, 10, None)
+    assignments.add_subgrade(pset03)
+    pset04 = Grades("pset 04", 5, 10, None)
+    assignments.add_subgrade(pset03)
+
+    # EXAMS
+    exams = Grades("tests", 75, None, None)
+    course.add_subgrade(exams)
+
+    midterm01 = Grades("midterm 01", 15, 40, None)
+    exams.add_subgrade(midterm01)
+    midterm02 = Grades("midterm 02", 15, 40, None)
+    exams.add_subgrade(midterm02)
+    final = Grades("final", 45, 80, None)
+    exams.add_subgrade(final)
+
+    course.print_tree()
     print()
 
