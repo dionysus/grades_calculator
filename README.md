@@ -203,16 +203,16 @@ The right columns display the tree attributes:
 - GT: total marks available for item
 
 ```
-CSC 101                   [WT: 100 | GP:   90 | GR: --- | GT: 100]
+CSC 101                   [WT: 100 | GP:  (85) | GR:   0 | GT:   0]
 ----------------------------------------------------------------------
-├── weekly preps          [WT:   5 | GP:   90 | GR: --- | GT: 100]
-├── assignments           [WT:  20 | GP:   90 | GR: --- | GT: 100]
-│   ├── pset 01           [WT:   5 | GP:   90 | GR: --- | GT:  10]
-│   ├── pset 02           [WT:   5 | GP:   90 | GR: --- | GT:  10]
-│   ├── pset 03           [WT:   5 | GP:   90 | GR: --- | GT:  10]
-│   └── pset 03           [WT:   5 | GP:   90 | GR: --- | GT:  10]
-└── tests                 [WT:  75 | GP:   90 | GR: --- | GT: 100]
-    ├── midterm 01        [WT:  15 | GP:   90 | GR: --- | GT:  40]
-    ├── midterm 02        [WT:  15 | GP:   90 | GR: --- | GT:  40]
-    └── final             [WT:  45 | GP:   90 | GR: --- | GT:  80]
+├── weekly preps          [WT:   5 | GP: (100) | GR: --- | GT: 100]
+├── assignments           [WT:  20 | GP:  (95) | GR: --- | GT: 100]
+│   ├── pset 01           [WT:   5 | GP:  [95] | GR: --- | GT:  10]
+│   ├── pset 02           [WT:   5 | GP:  [95] | GR: --- | GT:  10]
+│   ├── pset 03           [WT:   5 | GP:  [95] | GR: --- | GT:  10]
+│   └── pset 03           [WT:   5 | GP:  [95] | GR: --- | GT:  10]
+└── tests                 [WT:  75 | GP:  [82] | GR: --- | GT: 100]
+    ├── midterm 01        [WT:  15 | GP:  [82] | GR: --- | GT:  40]
+    ├── midterm 02        [WT:  15 | GP:  [82] | GR: --- | GT:  40]
+    └── final             [WT:  45 | GP:  [82] | GR: --- | GT:  80]
 ```
