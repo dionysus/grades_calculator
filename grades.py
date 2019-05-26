@@ -188,15 +188,40 @@ class Grades:
         """
         return math.ceil(self.goal_percent / 100 * self.grade_total)
 
-    def print_tree(self, indentation: int = 0) -> None:
+    def print_tree(self, indentation: int = 0, end: bool = False) -> None:
         """ Print a simple text visualization of the Tree
         """
 
-        id_str = '{} [WT: {} / GP: {} / GR: {} / GT: {}]'.format(
-            self._name, self.weight, self.goal_percent, self.grade_received,
-            self.grade_total)
+        weight = self._none_str(self.weight)
+        goal_percent = self._none_str(self.goal_percent)
+        grade_received = self._none_str(self.grade_received)
+        grade_total = self._none_str(self.grade_total)
 
-        print(str(indentation) + ']-' + indentation * '-' + '>', id_str)
+        id_str = '[WT: {:>3.3} | GP: {:>4.4} | GR: {:>3.3} | GT: {:>3.3}]'.format(
+            weight, goal_percent, grade_received, grade_total)
 
-        for subtree in self._subgrades:
-            subtree.print_tree(indentation + 1)
+        # level_str = str(indentation) + ']' + (
+        #     indentation) * '|  ' + '├── ' + self._name
+
+        if not end:
+            level_str = indentation * '   ' + '├── ' + self._name
+        else:
+            level_str = indentation * '   ' + '└── ' + self._name
+
+        f = '{0:25} {1:>25}'
+
+        print(f.format(level_str, id_str))
+
+        # for subtree in self._subgrades:
+        #     subtree.print_tree(indentation + 1, False)
+
+        for i in range(len(self._subgrades)):
+            self._subgrades[i].print_tree(indentation + 1,
+                                          i == len(self._subgrades) - 1)
+
+    def _none_str(self, num) -> str:
+        """return num as a str if num is not None, else return --- """
+        if num is None:
+            return '---'
+        else:
+            return str(num)
