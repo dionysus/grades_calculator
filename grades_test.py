@@ -220,8 +220,19 @@ if __name__ == '__main__':
     print('-' * 70 + '\n' * 3)
 
     course.set_goal_percent(85)
-    # preps.set_goal_percent(100)
-    # assignments.set_goal_percent(95)
-
     course.print_tree()
     print('-' * 70 + '\n' * 3)
+    
+    assignments.set_goal_percent(95)
+    course.print_tree()
+    print('-' * 70 + '\n' * 3)
+    
+    final.set_goal_percent(100)
+    course.print_tree()
+    print('-' * 70 + '\n' * 3)
+
+    leafs = course._get_all_leafs()
+    print('Leafs:')
+    print('----------')
+    for leaf in leafs:
+        print(leaf._name)

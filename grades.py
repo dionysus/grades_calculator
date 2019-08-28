@@ -14,7 +14,7 @@ class Grades:
 
 	== attributes ==
 	weight - percentage of weight.  if none, count marks
-	grade_received - mark received
+	grade_received - mark received (only for leaf of tree)
 	grade_total - total possible grade
 	goal_percent - goal of grade in percent
 
@@ -110,44 +110,46 @@ class Grades:
 		self.grade_received = grade
 
 		if self._parent is not None:
-				self._parent.update_all_goal_percents()
+			self._parent.update_all_goal_percents()
 
 	def set_goal_percent(self, percent: Optional[int]) -> None:
 		"""update the goal_percent with a fixed goal, or clear goal
 		"""
 
 		if percent is not None:
-				self.goal_percent = percent
-				self._goal_percent_set = True
+			self.goal_percent = percent
+			self._goal_percent_set = True
 
 		else:
-				self.goal_percent = None
-				self._goal_percent_set = False
+			self.goal_percent = None
+			self._goal_percent_set = False
 
 		if self._parent is not None:
+			if self._parent._goal_percent_set:
 				self._parent.update_all_goal_percents()
-		else:
-				self.update_all_goal_percents()
+			else: # parent is not set, need to update upwards!
+				top = self._get_top_of_tree()
+				top.update_all_goal_percents()
+
+		elif self._subgrades != []:
+			self.update_all_goal_percents()
+
+	def update_all_goal_percents_leaf(self) -> None:
+		"""update the goal percent of leafs
+		"""
 
 	def update_all_goal_percents(self) -> None:
 		"""update the goal percent with goal_percent of tree and children
 		"""
-		# TODO: Make recursive
-
-		# if self._subgrades == []:
-		#     if self.set_goal_percent():
-		#         pass
-		#     else:
-		#         self.g
-
-		if self._subgrades != []:
-			remaining_percent = self.update_remaining_percent()
-
-			for sub in self._subgrades:
-				if sub.grade_received is None and not sub._goal_percent_set:
-					sub.goal_percent = remaining_percent
-				if sub.grade_received:
-					sub.goal_percent = None
+		remaining_percent = self.update_remaining_percent()
+  
+		for sub in self._subgrades:
+			if sub.grade_received is None and not sub._goal_percent_set:
+				sub.goal_percent = remaining_percent
+			if sub.grade_received is not None:
+				sub.goal_percent = None
+			if sub._subgrades != []:
+				sub.update_all_goal_percents()
 
 	def update_remaining_percent(self) -> int:
 		"""
@@ -155,26 +157,21 @@ class Grades:
 		individual goal grade to received goal grade
 		"""
 		total_weight = 0
-
 		rcv_weight = 0
 		rcv_value = 0
-
 		total_grade_total = 0
 		total_grade_received = 0
 
 		for sub in self._subgrades:
-
-				total_weight += sub.weight
-
-				if sub.grade_received is not None:
-						rcv_weight += sub.weight
-						rcv_value += sub.weight * sub.grade_received / sub.grade_total
-						total_grade_total += sub.grade_total
-						total_grade_received += sub.grade_received
-
-				elif sub._goal_percent_set:
-						rcv_weight += sub.weight
-						rcv_value += sub.weight * sub.goal_percent / 100
+			total_weight += sub.weight
+			if sub.grade_received is not None:
+				rcv_weight += sub.weight
+				rcv_value += sub.weight * sub.grade_received / sub.grade_total
+				total_grade_total += sub.grade_total
+				total_grade_received += sub.grade_received
+			elif sub._goal_percent_set:
+				rcv_weight += sub.weight
+				rcv_value += sub.weight * sub.goal_percent / 100
 
 		# update parent weight
 		self.weight = total_weight
@@ -199,6 +196,32 @@ class Grades:
 		"""get required grade to achieve goal_percent
 		"""
 		return math.ceil(self.goal_percent / 100 * self.grade_total)
+
+	def _get_top_of_tree(self) -> Grades:
+		"""return Grades that is at the top of the Tree
+		"""
+
+		if self._parent is None:
+			return self
+		else:
+			return self._parent._get_top_of_tree()
+
+	def _get_all_leafs(self) -> List[Grades]:
+		"""return list containing all the leaves attached, or return self if 
+		self is a leaf
+		"""
+		
+		if self._subgrades == []:
+			return [self]
+		
+		if self.grade_received:
+			return [self]
+
+		else:
+			leafs = []
+			for sub in self._subgrades:
+				leafs.extend(sub._get_all_leafs())
+			return leafs
 
 	def print_tree(self, indentation: int = 0, indent: str = '') -> None:
 		""" Print a simple text visualization of the Tree
