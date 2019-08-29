@@ -111,10 +111,6 @@ class Grades:
 			self._parent.update_all_goal_percents()
 
 # ---------- GOAL PERCENT ---------- #
-	def _update_goal_percent_parent_set(self) -> None:
-		"""
-		"""
-		pass
 
 	def set_goal_percent(self, percent: Optional[int]) -> None:
 		"""update the goal_percent with a fixed goal, or clear goal
