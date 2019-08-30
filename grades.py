@@ -112,10 +112,49 @@ class Grades:
 
 # ---------- GOAL PERCENT ---------- #
 
+# 1 - set goal_percent of specific Grade
+# 2 - find first gp_set ancestor (clear gp of non-set)
+# 3 - calculate required average for gp_set grades + leafs
+# 4 - change gp of all leafs
+# 5 - update parents
+
 	def set_goal_percent(self, percent: Optional[int]) -> None:
 		"""update the goal_percent with a fixed goal, or clear goal
 		"""
-		# UPDATE SELF GRADE
+		# 1 - set goal_percent of specific Grade
+		# 2 - find first gp_set ancestor (clear gp of non-set)
+		# 3 - calculate required average for gp_set grades + leafs
+		# 4 - change gp of all leafs
+		# 5 - update parents
+
+		# 1 - set goal_percent of specific Grade
+		self._set_gp(percent)
+		# 2a - if a parent, update goal of children
+		if self._subgrades != []:
+			self._update_gp_below()
+		# 2 - find first gp_set ancestor (clear gp of non-set)
+		top = self._get_top_gp_set(True)
+		top._update_gp_below()
+
+
+	def _update_gp_below(self) -> None:
+		"""update goal percent of Grades below
+		"""
+		# 3 - calculate required average for gp_set grades + leafs
+		ends = self._get_all_gp_or_leafs(True) # check if change top works...
+		new_goal = self._percent_required(ends)
+		print(new_goal)
+		# 4 - change gp of all leafs
+		for end in ends:
+			if not end._goal_percent_set:
+				end.goal_percent = new_goal
+		#5 - update loose parents (lol)
+		self._update_gp_parents()
+
+	def _set_gp(self, percent: Optional[int]) -> None:
+		"""set the gp and gp_set to True if percent is an int, else
+		set the gp to None and gp_set to False
+		"""
 		if percent is None: # clear the percent
 			self.goal_percent = None
 			self._goal_percent_set = False
@@ -124,34 +163,48 @@ class Grades:
 			self.goal_percent = percent
 			self._goal_percent_set = True
 
-		# UPDATE THE REST
-		if self._parent is not None:
-			if self._parent._goal_percent_set:
-				self._parent.update_all_goal_percents()
-			else: # parent is not set, need to update upwards!
-				top = self._get_top_of_tree()
-				top.update_all_goal_percents()
+	def _get_top_gp_set(self, first: bool = False) -> Grades:
+		"""return highest ancestor in tree that has goal percentage set
+		"""
+		if self._parent is None:
+			return self
+		if self._goal_percent_set and not first:
+			return self
+		else:
+			return self._parent._get_top_gp_set()
 
-		elif self._subgrades != []:
-			self.update_all_goal_percents()
+	def _get_all_gp_or_leafs(self, first: bool = False) -> List[Grades]:
+		"""return list containing all the gp_set or leaves attached, or 
+		return self if self is a leaf
+		"""
+		# problem with self._goal_percent_set, as it has just been set!
+		if self._subgrades == []:
+			if not first:
+				return [self]
+			else:
+				return []
+		if self.grade_received and not first:
+			return [self]
+		if self._goal_percent_set and not first:
+			return [self]
 
-
-	# def update_all_goal_percents_leaf(self) -> None:
-	# 	"""update the goal percent of leafs
-	# 	"""
-	# 	# top = self._get_top_of_tree()
-	# 	leafs = self._get_all_leafs()
-	# 	self._percent_required(leafs)
-	# 	self.update_remaining_percent()
+		else:
+			leafs = []
+			for sub in self._subgrades:
+				leafs.extend(sub._get_all_gp_or_leafs())
+			return leafs
 
 	def _percent_required(self, grades: List[Grades]) -> int:
-		"""
+		"""return the percent required for all Grades in grades to achieve the
+		goal percentage of self
 		"""
 		total_weight = 0
 		rcv_weight = 0
 		rcv_value = 0
 		total_grade_total = 0
 		total_grade_received = 0
+
+		# top = self._get_top_gp_set(True)
 
 		for grade in grades:
 			total_weight += grade.weight
@@ -172,6 +225,28 @@ class Grades:
 				(self.goal_percent / 100 * total_weight - rcv_value) /
 				(total_weight - rcv_weight) * 100
 			)
+
+	def _update_gp_parents(self) -> None:
+		"""update the goal percents of parents (after updated children)
+		"""
+		if self._subgrades == []:
+			return None
+
+		else:
+			for sub in self._subgrades:
+				if sub._subgrades != []:
+					sub._update_gp_parents()
+			
+			weights = 0
+			grades = 0
+			if not self._goal_percent_set:
+				for sub in self._subgrades:
+					weights += sub.weight
+					if sub.grade_received is not None:
+						grades += sub.grade_received * sub.weight
+					else:
+						grades += sub.goal_percent * sub.weight
+				self.goal_percent = math.ceil(grades / weights)
 
 	def update_all_goal_percents(self) -> None:
 		"""update the goal percent with goal_percent of tree and children
@@ -231,16 +306,6 @@ class Grades:
 		"""get required grade to achieve goal_percent
 		"""
 		return math.ceil(self.goal_percent / 100 * self.grade_total)
-
-	def _get_top_gp_set(self) -> Grades:
-		"""return highest ancestor in tree that has goal percentage set
-		"""
-		if self._parent is None:
-			return self
-		if self._goal_percent_set:
-			return self
-		else:
-			return self._parent._get_top_gp_set()
 
 	def _get_top_of_tree(self) -> Grades:
 		"""return Grades that is at the top of the Tree
