@@ -86,7 +86,7 @@ class Grades:
 				else:
 						self.weight += grade.weight
 
-		self.update_all_goal_percents()
+		self._update_gp_highest_set_gp
 
 	def remove_subgrade(self, grade: Grades) -> None:
 		"""remove subgrade from parent and parent from subgrade
@@ -99,7 +99,7 @@ class Grades:
 
 		grade.update_grade_received(GOAL_PERCENT)
 
-		self.update_all_goal_percents()
+		self._update_gp_highest_set_gp
 
 	def update_grade_received(self, grade: Optional[float]) -> None:
 		"""update the grade received with a float rounded to 1 decimal point
@@ -108,17 +108,11 @@ class Grades:
 		self.grade_received = grade
 
 		if self._parent is not None:
-			self._parent.update_all_goal_percents()
+			self._update_gp_highest_set_gp
 
 # ---------- GOAL PERCENT ---------- #
 
-# 1 - set goal_percent of specific Grade
-# 2 - find first gp_set ancestor (clear gp of non-set)
-# 3 - calculate required average for gp_set grades + leafs
-# 4 - change gp of all leafs
-# 5 - update parents
-
-	def set_goal_percent(self, percent: Optional[int]) -> None:
+	def set_gp(self, percent: Optional[int]) -> None:
 		"""update the goal_percent with a fixed goal, or clear goal
 		"""
 		# 1 - set goal_percent of specific Grade
@@ -133,16 +127,26 @@ class Grades:
 		if self._subgrades != []:
 			self._update_gp_below()
 		# 2 - find first gp_set ancestor (clear gp of non-set)
+		self._update_gp_highest_set_gp()
+
+	def _update_gp_all(self) -> None:
+		"""update gp of all Grades from the top of the Tree
+		"""
+		top = self._get_top_of_tree
+		top._update_gp_below
+
+	def _update_gp_highest_set_gp(self) -> None:
+		"""update gp of all Grades from the highest gp_set ancestor
+		"""
 		top = self._get_top_gp_set(True)
 		top._update_gp_below()
-
 
 	def _update_gp_below(self) -> None:
 		"""update goal percent of Grades below
 		"""
 		# 3 - calculate required average for gp_set grades + leafs
 		ends = self._get_all_gp_or_leafs(True) # check if change top works...
-		new_goal = self._percent_required(ends)
+		new_goal = self._gp_required(ends)
 		print(new_goal)
 		# 4 - change gp of all leafs
 		for end in ends:
@@ -150,18 +154,6 @@ class Grades:
 				end.goal_percent = new_goal
 		#5 - update loose parents (lol)
 		self._update_gp_parents()
-
-	def _set_gp(self, percent: Optional[int]) -> None:
-		"""set the gp and gp_set to True if percent is an int, else
-		set the gp to None and gp_set to False
-		"""
-		if percent is None: # clear the percent
-			self.goal_percent = None
-			self._goal_percent_set = False
-
-		else:
-			self.goal_percent = percent
-			self._goal_percent_set = True
 
 	def _get_top_gp_set(self, first: bool = False) -> Grades:
 		"""return highest ancestor in tree that has goal percentage set
@@ -194,7 +186,7 @@ class Grades:
 				leafs.extend(sub._get_all_gp_or_leafs())
 			return leafs
 
-	def _percent_required(self, grades: List[Grades]) -> int:
+	def _gp_required(self, grades: List[Grades]) -> int:
 		"""return the percent required for all Grades in grades to achieve the
 		goal percentage of self
 		"""
