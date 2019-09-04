@@ -43,12 +43,12 @@ class Grades:
 	_subgrades: List[Grades]
 	_parent: Optional[Grades]
 
-	def __init__(self,
-								name: str,
-								weight: Optional[float],
-								grade_total: Optional[float],
-								goal_percent: Optional[int]
-								) -> None:
+	def __init__(self, 
+				 name: str,
+				 weight: Optional[float],
+				 grade_total: Optional[float],
+				 goal_percent: Optional[int]
+				) -> None:
 
 		self._name = name
 		self.weight = weight
