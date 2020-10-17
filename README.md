@@ -4,10 +4,10 @@ A grades calculator for setting course goals to achieve optimal grades.
 
 This is a program I am working on that, having input the course items (from a syllabus, per se), and setting goals, will help track the necessary grades needed to achieve the course goal.
 
-The concept is taken  from a spreadsheet I have been using to track my grades.
+The concept is taken from a spreadsheet I have been using to track my grades. I originally made this in python, but am migrating the brains into Dart so I can work on it in as a mobile App in Flutter.
 
 Personal Project
-Language: Python
+Language: Dart, ~~Python~~
 
 ---
 
