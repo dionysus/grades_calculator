@@ -6,32 +6,40 @@ class Grade {
   Grade _parent;
 
   // attributes
-  double _weight; // as a percent eg. 30
-  bool _weightSet = false;
-  double _grade;
+  num _weight; // as a percent eg. 30
+  num _grade;
   bool _gradeSet = false;
-  double _gradeTotal;
+  num _gradeTotal;
   bool _goalSet = false;
-  double _goal;
+  num _goal;
 
-  double get percent => _grade / _gradeTotal * 100;
+  num get percent => _grade / _gradeTotal * 100;
 
-  // Constructors
+//! ----------------------------------------------------------------Constructors
   Grade(this._name);
-  Grade.asGrade(this._name, this._grade, this._gradeTotal) {
-    this._gradeSet = true;
+  Grade.asRoot(this._name, num goal) {
+    this.setGrade(null, 100);
+    this.setGoal(goal);
   }
-  Grade.asPercent(this._name, this._grade) {
-    this._gradeSet = true;
-    this._gradeTotal = 100.0;
+  Grade.asGrade(this._name, num grade, num gradeTotal, this._weight) {
+    this.setGrade(grade, gradeTotal);
+  }
+  Grade.asPercent(this._name, num grade, this._weight) {
+    this.setGrade(grade, 100);
   }
 
 //! -------------------------------------------------------------------- GETTERS
 
-  getName() => this._name;
-  getParent() => this._parent;
-  getChildren() => this._subGrades;
-  getRoot() {
+  String getName() => this._name;
+  Grade getParent() => this._parent;
+  List<Grade> getSubGrades() => this._subGrades;
+  num getGradeTotal() => this._gradeTotal;
+  num getWeight() => this._weight;
+  bool getGradeSet() => this._gradeSet;
+  num getGoal() => this._goal;
+  bool getGoalSet() => this._goalSet;
+
+  Grade getRoot() {
     Grade root = this;
     while (root.getParent() != null) {
       root = root.getParent();
@@ -73,7 +81,7 @@ class Grade {
     }
   }
 
-  void setGrade(double grade, double gradeTotal) {
+  void setGrade(num grade, num gradeTotal) {
     // Sets grade, gradeSet, gradeTotal.
     // nulls gradeSet and grade if grade is null
     this._gradeSet = (grade != null);
@@ -82,99 +90,55 @@ class Grade {
     // updateAll();
   }
 
-  void setPercent(double percent) {
+  void setPercent(num percent) {
     setGrade(percent, 100);
   }
 
 //! ----------------------------------------------------------------------- GOAL
-  getGoal() => this._goal;
 
-  setGoal(double goal) {
+  setGoal(num goal) {
     this._goalSet = (goal != null);
     this._goal = goal;
   }
 
-//! --------------------------------------------------------------------- WEIGHT
-
-  getWeight() => this._weight;
-
-  setWeight(double weight) {
-    this._weightSet = (weight != null);
-    this._weight = weight;
-    // updateAll();
-  }
-
 //! ---------------------------------------------------------------- UPDATE TREE
-	// update (GRADE or GOAL) and WEIGHT
+  // update (GRADE or GOAL) and WEIGHT
 
   updateAll() {
     // navigate up to root
     Grade root = getRoot();
     root._weight = 100;
     // calculate child weights
-    root.updateWeights();
+    updateChildGoals();
   }
 
-  updateWeights() {
-
-    double sumWeight = 0.0;
-    int notWeightSetCount = 0;
-
-    this._subGrades.forEach((child) {
-      if (child._weightSet) {
-        sumWeight += child._weight;
-      } else {
-        notWeightSetCount += 1;
-      }
-    });
-    this._subGrades.forEach((child) {
-      if (!child._weightSet) {
-        child._weight = (100 - sumWeight) / notWeightSetCount;
-      }
-    });
-    this._subGrades.forEach((child) {
-      child.updateWeights();
-    });
-  }
-
-  calcGrade() {
-    // grade assigned
+  updateChildGoals() {
     if (this._gradeSet) {
       return;
     }
-    // has no grade + no children
-    else if (this._subGrades.length == 0) {
-      return null;
-    }
 
     // calculate children by _weight
-    double sumWeight = 0.0;
-    int countWeightless = 0;
-    double tempGrade = 0.0;
+    num sumGrade = 0;
+    num sumWeight = 0;
 
-    this._subGrades.forEach((child) {
-      if (child._weight != null) {
-        sumWeight += child._weight;
-      } else {
-        countWeightless++;
+    this.getSubGrades().forEach((child) {
+      if (child.getGradeSet()) {
+        sumGrade += child.getWeight() / this.getGradeTotal() * child.getGrade();
+        sumWeight += child.getWeight();
+      } else if (child.getGoalSet()) {
+        sumGrade += child.getWeight() / this.getGradeTotal() * child.getGoal();
+        sumWeight += child.getWeight();
       }
     });
 
-    this._subGrades.forEach((child) {
-      if (child._weight != null) {
-        var childGrade = child.getGrade();
-        if (childGrade != null) {
-          tempGrade += childGrade * (child._weight / 100);
-        } else {
-          return null;
-        }
-      } else {
-        // assume weightless has unassigned _weight split between number of weightless
-        tempGrade +=
-            child.getGrade() * (((100 - sumWeight) / countWeightless) / 100);
+    num reqPercent =
+        (this.getGoal() - sumGrade) / (this.getWeight() - sumWeight);
+
+    this.getSubGrades().forEach((child) {
+      if (!child.getGradeSet() && !child.getGoalSet()) {
+        child._goal = reqPercent * child.getGradeTotal();
       }
     });
-    return tempGrade;
   }
 
 //! ---------------------------------------------------------------------- PRINT
@@ -213,22 +177,47 @@ class Grade {
     }
   }
 
-  printDescendents([level = 1]) {
-    if (level == 1) print(this);
+  printAll() {
+    print("Name".padRight(20) +
+        "Grade".padRight(20) +
+        "Goal".padRight(10) +
+        "Weight".padRight(10));
+    Grade root = this.getRoot();
+    root.printDescendents();
+  }
+
+  printSelf(level) {
+    // prefix
+    String prefix = '  ' * level + "└── " + this._name;
+    prefix = prefix.padRight(20);
+    // suffix
+
+    String grade = this._grade.toString();
+    String grade_string = (this._gradeSet) ? '(${grade})' : '[${grade}]';
+    String grade_total = this.getGradeTotal().toString();
+    grade_string =
+        ' ' * level + '${grade_string} / ${grade_total}'.padRight(20);
+    String weight = this.getWeight().toString();
+    String weight_string = ' ' * level + '(${weight})';
+    String goal = this._goal?.toStringAsFixed(2);
+    String goal_string = ' ' * level +
+        ((this._goalSet) ? '(${goal})' : '[${goal}]').padRight(10);
+    String suffix = '${grade_string} ${goal_string} ${weight_string}';
+
+    print(prefix + suffix);
+  }
+
+  printDescendents([level = 0]) {
+    this.printSelf(level);
     for (int i = 0; i < this._subGrades.length; i++) {
-      Grade child = this._subGrades[i];
-      var symbol = (i == this._subGrades.length - 1) ? "└──" : "├──";
-      if (level > 1) {
-        print(' |' + '  ' * level + '$symbol $child');
-      } else {
-        print(' ' * level + '$symbol $child');
-      }
-      child.printDescendents(level + 1);
+      this._subGrades[i].printDescendents(level + 1);
     }
   }
 
   @override
   String toString() {
-    return '${this._name.padRight(10)} | %: ${this.getGradeString(0).padRight(4)} [G: ${this.getGoalString(2).padRight(4)}| W: ${this.getWeight()}]';
+    String grade = this.getGrade().toString();
+    String grade_total = this.getGradeTotal().toString();
+    return '${this._name.padRight(20)} | ${grade} / ${grade_total} G:${this.getGoalString(2).padRight(4)} | W: ${this.getWeight()}';
   }
 }
